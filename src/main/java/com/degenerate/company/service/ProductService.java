@@ -1,5 +1,7 @@
 package com.degenerate.company.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.degenerate.company.dto.ProductRequestDTO;
@@ -11,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LicorService {
+public class ProductService {
 
     private final ProductRepository productRepository;
 
@@ -38,5 +40,22 @@ public class LicorService {
         dto.setStock(product.getStock());
 
         return dto;
+    }
+
+    public Optional<ProductResponseDTO> getProduct(Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            ProductResponseDTO response = new ProductResponseDTO();
+            response.setCode_product(product.getCode_product());
+            response.setName_product(product.getName_product());
+            response.setPrice(product.getPrice());
+            response.setSection(product.getSection());
+            response.setStock(product.getStock());
+
+            return Optional.of(response);
+        } else {
+            return Optional.empty();
+        }
     }
 }
